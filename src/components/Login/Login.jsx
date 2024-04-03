@@ -4,7 +4,7 @@ import { AuthContext } from './../AuthProvider/AuthProvider';
 
 const Login = () => {
 
-  const {loginUser} = useContext(AuthContext);
+  const {loginUser,googleLogin,setUser,facebookLogin} = useContext(AuthContext);
 
   const handleLogin = e =>{
     e.preventDefault();
@@ -12,6 +12,17 @@ const Login = () => {
     const password = e.target.password.value;
     console.log(email,password);
     loginUser(email,password)
+  }
+
+  const handleGoogleLogin = ()=>{
+    googleLogin()
+    .then(result => setUser(result.user))
+    .catch(error => console.log(error))
+  }
+  const handleFacebookLogin = () =>{
+    facebookLogin()
+    .then(result =>setUser(result.user))
+    .catch(error => console.log(error))
   }
 
   return (
@@ -25,8 +36,10 @@ const Login = () => {
         <p>password</p>
         <input name="password" type="text" placeholder="Type here" className="input input-bordered w-full" />
       </div>
-      <button type="submit" className="w-full btn btn-info my-2 text-white">Register</button>
+      <button type="submit" className="w-full btn btn-info my-2 text-white">Login</button>
     </form>
+    <button onClick={handleGoogleLogin}>Google login</button>
+    <button onClick={handleFacebookLogin}>Facebook login</button>
   </div>
   );
 };

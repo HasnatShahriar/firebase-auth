@@ -4,9 +4,10 @@ import { AuthContext } from "../AuthProvider/AuthProvider";
 
 const Register = () => {
   
-  const {registerUser} = useContext(AuthContext);
+  const {registerUser,setUser} = useContext(AuthContext);
   // console.log(registerUser);
   const [error,setError] = useState('');
+  const [emailError,setEmailError] = useState('');
 
   const handleRegister = e => {
     e.preventDefault();
@@ -16,6 +17,11 @@ const Register = () => {
     const password = e.target.password.value;
     const confirmedPassword = e.target.confirmedPassword.value;
 
+
+    if(!/@gmail\.com$/.test(email)){
+      setEmailError('Email must end with @gmail.com')
+      return;
+    }
 
     if(password.length < 6){
       setError("password must be 6 or more characters")
@@ -33,10 +39,16 @@ const Register = () => {
       setError('password must have at least one special characters (!,@,#,$,%,^,&,*)')
       return;
      }
-    setError('')
+    setError('');
+    setEmailError('');
 
     console.log(name, photo, email, password, confirmedPassword);
+
     registerUser(email,password)
+    .then(result =>{
+      setUser(result.user)
+    })
+    .catch(error => setError(error.message))
   }
 
 
@@ -55,6 +67,9 @@ const Register = () => {
           <p>email</p>
           <input name="email" type="text" placeholder="Type here" className="input input-bordered w-full" />
         </div>
+        {
+          emailError && <small className="text-red-700">{emailError}</small>
+        }
         <div>
           <p>password</p>
           <input name="password" type="text" placeholder="Type here" className="input input-bordered w-full" />
